@@ -25,7 +25,7 @@ python3 -m src.main build-dataset
 ```
 
 This produces `data/processed/sp500_monthly_features.parquet` with:
-- 74 S&P 500 tickers (limited by ARF API availability)
+- 502 S&P 500 tickers (all current constituents)
 - ~14 years of monthly data (2012-2026)
 - Features: mom_1m, mom_3m, mom_6m, mom_12m, volatility_30d
 - Target: next-month return (target_return)
@@ -33,6 +33,7 @@ This produces `data/processed/sp500_monthly_features.parquet` with:
 Options:
 - `--no-cache`: Force re-download (default uses local cache)
 - `--period 15y`: Data lookback period
+- `--delay 0.1`: Delay between API calls (controls concurrency)
 - `--output path.parquet`: Custom output path
 
 ## Data

@@ -5,8 +5,8 @@ Fetches S&P 500 ticker list from Wikipedia, then downloads
 daily OHLCV data from the ARF Data API for available tickers.
 """
 import io
-import time
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import pandas as pd
@@ -98,7 +98,10 @@ def download_sp500_data(
     delay: float = 0.2,
 ) -> pd.DataFrame:
     """
-    Download daily OHLCV data for all available S&P 500 tickers.
+    Download daily OHLCV data for all S&P 500 tickers.
+
+    The ARF Data API supports tickers beyond its listed catalog,
+    so we attempt all S&P 500 tickers directly.
 
     Args:
         interval: Data interval (default '1d')
@@ -115,19 +118,29 @@ def download_sp500_data(
         logger.info(f"Loading cached data from {cache_path}")
         return pd.read_parquet(cache_path)
 
-    tickers = get_sp500_available_tickers()
+    tickers = get_sp500_tickers()
     if not tickers:
-        raise RuntimeError("No S&P 500 tickers available in ARF Data API")
+        raise RuntimeError("No S&P 500 tickers found from Wikipedia")
 
-    logger.info(f"Downloading data for {len(tickers)} tickers...")
+    max_workers = max(1, int(1 / delay)) if delay > 0 else 10
+    logger.info(
+        f"Downloading data for {len(tickers)} tickers "
+        f"(max_workers={max_workers})..."
+    )
     frames = []
-    for i, ticker in enumerate(tickers):
-        logger.info(f"[{i+1}/{len(tickers)}] Downloading {ticker}...")
+
+    def _fetch(ticker: str) -> tuple[str, pd.DataFrame | None]:
         df = download_ticker_data(ticker, interval=interval, period=period)
-        if df is not None and len(df) > 0:
-            frames.append(df)
-        if delay > 0:
-            time.sleep(delay)
+        return ticker, df
+
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_fetch, t): t for t in tickers}
+        for i, future in enumerate(as_completed(futures), 1):
+            ticker, df = future.result()
+            if df is not None and len(df) > 0:
+                frames.append(df)
+            if i % 50 == 0 or i == len(tickers):
+                logger.info(f"[{i}/{len(tickers)}] Downloaded so far...")
 
     if not frames:
         raise RuntimeError("No data downloaded for any ticker")

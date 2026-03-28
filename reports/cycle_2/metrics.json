@@ -7,14 +7,15 @@
   "transactionCosts": { "feeBps": 10, "slippageBps": 5, "netSharpe": 0.0 },
   "walkForward": { "windows": 0, "positiveWindows": 0, "avgOosSharpe": 0.0 },
   "customMetrics": {
-    "datasetTickers": 74,
-    "datasetRows": 12019,
+    "datasetTickers": 502,
+    "datasetRows": 79848,
     "datasetYears": 13.9,
     "dateRangeStart": "2012-03-31",
     "dateRangeEnd": "2026-02-28",
     "featureColumns": ["mom_1m", "mom_3m", "mom_6m", "mom_12m", "volatility_30d"],
     "targetColumn": "target_return",
-    "apiTickersAvailable": 74,
-    "sp500TickersTotal": 503
+    "sp500TickersTotal": 503,
+    "sp500TickersDownloaded": 503,
+    "sp500TickersInDataset": 502
   }
 }

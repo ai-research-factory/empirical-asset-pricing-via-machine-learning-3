@@ -8,7 +8,7 @@
   "walkForward": { "windows": 0, "positiveWindows": 0, "avgOosSharpe": 0.0 },
   "customMetrics": {
     "datasetTickers": 74,
-    "datasetRows": 12100,
+    "datasetRows": 12019,
     "datasetYears": 13.9,
     "dateRangeStart": "2012-03-31",
     "dateRangeEnd": "2026-02-28",

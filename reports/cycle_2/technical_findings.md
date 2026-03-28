@@ -27,16 +27,20 @@ Built a complete data pipeline that fetches S&P 500 stock data from the ARF Data
 | Metric | Value |
 |--------|-------|
 | Tickers | 74 |
-| Total rows | 12,100 |
+| Total rows | 12,019 |
 | Date range | 2012-03-31 to 2026-02-28 |
 | Years of data | ~13.9 |
 | Features | mom_1m, mom_3m, mom_6m, mom_12m, volatility_30d |
+
+### Bug Fix: Momentum Feature Assignment
+
+Fixed a critical bug in `compute_momentum_features()` where using `df.loc[group.index, col]` with a non-unique DatetimeIndex caused momentum values to be overwritten across tickers sharing the same date. The last ticker processed would overwrite all others, resulting in identical momentum values for all tickers on a given date. The fix builds per-ticker DataFrames independently and concatenates them.
 
 ### Known Limitations
 
 - **Ticker coverage**: Only 74 of 503 S&P 500 tickers are available in the ARF Data API (14.7%). The acceptance criterion of 400+ tickers cannot be met with the current API. See `docs/open_questions.md`.
 - **Survivorship bias**: Using current S&P 500 constituents introduces survivorship bias, as delisted or removed stocks are excluded.
-- **Data start dates vary**: Some tickers (e.g., CEG, PLTR) have shorter histories due to IPO dates or corporate events.
+- **Data start dates vary**: Some tickers have shorter histories due to IPO dates or corporate events.
 
 ### Feature Definitions
 

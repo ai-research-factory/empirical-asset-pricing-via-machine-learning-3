@@ -64,13 +64,16 @@ def compute_momentum_features(df: pd.DataFrame) -> pd.DataFrame:
     - mom_12m: past 12-month cumulative return
     """
     df = df.copy()
+    frames = []
     for ticker, group in df.groupby("ticker"):
-        ret = group["monthly_return"]
-        df.loc[group.index, "mom_1m"] = ret
-        df.loc[group.index, "mom_3m"] = (1 + ret).rolling(3).apply(np.prod, raw=True) - 1
-        df.loc[group.index, "mom_6m"] = (1 + ret).rolling(6).apply(np.prod, raw=True) - 1
-        df.loc[group.index, "mom_12m"] = (1 + ret).rolling(12).apply(np.prod, raw=True) - 1
-    return df
+        g = group.copy()
+        ret = g["monthly_return"]
+        g["mom_1m"] = ret.values
+        g["mom_3m"] = ((1 + ret).rolling(3).apply(np.prod, raw=True) - 1).values
+        g["mom_6m"] = ((1 + ret).rolling(6).apply(np.prod, raw=True) - 1).values
+        g["mom_12m"] = ((1 + ret).rolling(12).apply(np.prod, raw=True) - 1).values
+        frames.append(g)
+    return pd.concat(frames).sort_index()
 
 
 def compute_volatility(daily_df: pd.DataFrame, monthly_df: pd.DataFrame) -> pd.DataFrame:

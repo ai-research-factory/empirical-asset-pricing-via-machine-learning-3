@@ -1,0 +1,48 @@
+{
+  "sharpeRatio": 1.3445,
+  "annualReturn": 0.1296,
+  "maxDrawdown": -0.063,
+  "hitRate": 0.6667,
+  "totalTrades": 126,
+  "transactionCosts": {
+    "feeBps": 10.0,
+    "slippageBps": 5.0,
+    "netSharpe": 1.3445
+  },
+  "walkForward": {
+    "windows": 3,
+    "positiveWindows": 3,
+    "avgOosSharpe": 1.3445
+  },
+  "customMetrics": {
+    "best_model": "lgbm_optimized",
+    "lgbm_default_sharpe": 0.9214,
+    "lgbm_optimized_sharpe": 1.3445,
+    "nn_default_sharpe": 0.7838,
+    "nn_optimized_sharpe": 0.3898,
+    "lgbm_best_params": {
+      "num_leaves": 63,
+      "learning_rate": 0.06237359193774226,
+      "feature_fraction": 0.8248986799176572,
+      "bagging_fraction": 0.8144856170871696,
+      "bagging_freq": 4,
+      "max_depth": 7,
+      "min_child_samples": 20,
+      "n_estimators": 500
+    },
+    "nn_best_params": {
+      "hidden_dims": [
+        96,
+        48
+      ],
+      "dropout": 0.42344666789045904,
+      "learning_rate": 0.00201372148892455,
+      "weight_decay": 1.3949897240307316e-05,
+      "batch_size": 128
+    },
+    "lgbm_optimization_trials": 30,
+    "nn_optimization_trials": 20,
+    "lgbm_fold1_best_sharpe": 0.5653,
+    "nn_fold1_best_sharpe": 0.3551
+  }
+}

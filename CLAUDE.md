@@ -7,7 +7,7 @@ proj_a9791753
 ResidualFactors
 
 ## Current Cycle
-2
+5
 
 ## Objective
 Implement, validate, and iteratively improve the paper's approach with production-quality standards.
@@ -102,10 +102,10 @@ df = df.set_index("timestamp")
 ## 全体Phase計画 (参考)
 
 ✓ Phase 1: コアアルゴリズム実装（LightGBM on Synthetic Data） — 合成データを用いて、リターン予測を行うLightGBMモデルの基本構造を実装する。
-→ Phase 2: データパイプライン構築（S&P 500） — yfinanceからS&P 500の株価データを取得し、月次リターンと基本特徴量を計算するパイプラインを構築する。
-  Phase 3: ウォークフォワード評価フレームワークの実装 — LightGBMモデルを実データで評価するためのウォークフォワード検証機能を実装する。
-  Phase 4: ニューラルネットワークモデルの実装と評価 — 論文のもう一つの主要モデルであるニューラルネットワークを実装し、同じウォークフォワード検証で評価する。
-  Phase 5: ハイパーパラメータ最適化 — LGBMとNNモデルの主要なハイパーパラメータをOptunaで最適化する。
+✓ Phase 2: データパイプライン構築（S&P 500） — yfinanceからS&P 500の株価データを取得し、月次リターンと基本特徴量を計算するパイプラインを構築する。
+✓ Phase 3: ウォークフォワード評価フレームワークの実装 — LightGBMモデルを実データで評価するためのウォークフォワード検証機能を実装する。
+✓ Phase 4: ニューラルネットワークモデルの実装と評価 — 論文のもう一つの主要モデルであるニューラルネットワークを実装し、同じウォークフォワード検証で評価する。
+→ Phase 5: ハイパーパラメータ最適化 — LGBMとNNモデルの主要なハイパーパラメータをOptunaで最適化する。
   Phase 6: フルスケール評価とベースライン比較 — 最適化済みモデルと線形モデルを、より多くのスプリット数でウォークフォワード評価し、性能を比較する。
   Phase 7: ポートフォリオ戦略とシャープレシオ計算 — モデルの予測に基づきロングショートポートフォリオを構築し、取引コスト考慮後のシャープレシオを計算する。
   Phase 8: 特徴量重要度の分析 — 最も性能の良いモデル（LGBM）について、どの特徴量がリターン予測に寄与しているかを分析する。
@@ -161,8 +161,8 @@ df = df.set_index("timestamp")
 
 ## 出力ファイル
 以下のファイルを保存してから完了すること:
-- `reports/cycle_2/metrics.json` — 下記スキーマに従う（必須）
-- `reports/cycle_2/technical_findings.md` — 実装内容、結果、観察事項
+- `reports/cycle_5/metrics.json` — 下記スキーマに従う（必須）
+- `reports/cycle_5/technical_findings.md` — 実装内容、結果、観察事項
 
 ### metrics.json 必須スキーマ
 ```json

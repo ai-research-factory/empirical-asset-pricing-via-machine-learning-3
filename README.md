@@ -36,6 +36,28 @@ Options:
 - `--delay 0.1`: Delay between API calls (controls concurrency)
 - `--output path.parquet`: Custom output path
 
+### Hyperparameter Optimization (Phase 5)
+
+Optimize LightGBM and Neural Network hyperparameters with Optuna:
+
+```bash
+python3 -m src.main optimize-hyperparams
+```
+
+This runs:
+1. Default LightGBM and NN walk-forward evaluation (baseline)
+2. Optuna optimization on the first fold (30 LGBM trials, 20 NN trials)
+3. Optimized model walk-forward evaluation
+4. Comparison and metrics generation
+
+Options:
+- `--lgbm-trials 30`: Number of Optuna trials for LightGBM
+- `--nn-trials 20`: Number of Optuna trials for NN
+- `--n-splits 5`: Walk-forward windows
+- `--data path.parquet`: Input data path
+
+Results: Best model is **LightGBM Optimized** with avg OOS net Sharpe of 1.34, improving +46% over default parameters.
+
 ## Data
 
 Data is fetched from the ARF Data API at runtime. Do not commit data files.

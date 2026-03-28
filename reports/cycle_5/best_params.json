@@ -1,0 +1,22 @@
+{
+  "lgbm": {
+    "num_leaves": 63,
+    "learning_rate": 0.06237359193774226,
+    "feature_fraction": 0.8248986799176572,
+    "bagging_fraction": 0.8144856170871696,
+    "bagging_freq": 4,
+    "max_depth": 7,
+    "min_child_samples": 20,
+    "n_estimators": 500
+  },
+  "nn": {
+    "hidden_dims": [
+      96,
+      48
+    ],
+    "dropout": 0.42344666789045904,
+    "learning_rate": 0.00201372148892455,
+    "weight_decay": 1.3949897240307316e-05,
+    "batch_size": 128
+  }
+}

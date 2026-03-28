@@ -57,6 +57,43 @@ def cmd_build_dataset(args: argparse.Namespace) -> None:
     print(f"  Output: {output_path}")
 
 
+def cmd_optimize_hyperparams(args: argparse.Namespace) -> None:
+    """Run hyperparameter optimization for LightGBM and NN models."""
+    import pandas as pd
+    from src.models.optimize import run_full_optimization
+
+    data_path = Path(args.data)
+    if not data_path.exists():
+        logger.error(f"Data file not found: {data_path}. Run 'build-dataset' first.")
+        sys.exit(1)
+
+    df = pd.read_parquet(data_path)
+    logger.info(f"Loaded {len(df)} rows, {df['ticker'].nunique()} tickers")
+
+    results = run_full_optimization(
+        df,
+        lgbm_trials=args.lgbm_trials,
+        nn_trials=args.nn_trials,
+        n_splits=args.n_splits,
+        output_dir=args.output_dir,
+    )
+
+    print(f"\n{'='*60}")
+    print("Hyperparameter Optimization Results")
+    print(f"{'='*60}")
+    print(f"Best model: {results['best_model']}")
+    for model_name, metrics in results["all_metrics"].items():
+        sharpe = metrics.get("avg_net_sharpe", 0)
+        print(f"  {model_name}: avg_net_sharpe={sharpe:.4f}")
+    print(f"\nLGBM best params (fold 1 Sharpe={results['lgbm_optimization']['best_sharpe_fold1']:.4f}):")
+    for k, v in results["lgbm_optimization"]["best_params"].items():
+        print(f"  {k}: {v}")
+    print(f"\nNN best params (fold 1 Sharpe={results['nn_optimization']['best_sharpe_fold1']:.4f}):")
+    for k, v in results["nn_optimization"]["best_params"].items():
+        print(f"  {k}: {v}")
+    print(f"\nResults saved to {args.output_dir}/")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Empirical Asset Pricing via Machine Learning"
@@ -90,6 +127,41 @@ def main() -> None:
         help="Delay between API calls in seconds (default: 0.2)",
     )
     build_parser.set_defaults(func=cmd_build_dataset)
+
+    # optimize-hyperparams command
+    opt_parser = subparsers.add_parser(
+        "optimize-hyperparams",
+        help="Run Optuna hyperparameter optimization for LightGBM and NN models",
+    )
+    opt_parser.add_argument(
+        "--data",
+        default="data/processed/sp500_monthly_features.parquet",
+        help="Input parquet file path",
+    )
+    opt_parser.add_argument(
+        "--lgbm-trials",
+        type=int,
+        default=30,
+        help="Number of Optuna trials for LightGBM (default: 30)",
+    )
+    opt_parser.add_argument(
+        "--nn-trials",
+        type=int,
+        default=20,
+        help="Number of Optuna trials for NN (default: 20)",
+    )
+    opt_parser.add_argument(
+        "--n-splits",
+        type=int,
+        default=5,
+        help="Number of walk-forward windows (default: 5)",
+    )
+    opt_parser.add_argument(
+        "--output-dir",
+        default="reports/cycle_5",
+        help="Output directory for results",
+    )
+    opt_parser.set_defaults(func=cmd_optimize_hyperparams)
 
     args = parser.parse_args()
     if args.command is None:

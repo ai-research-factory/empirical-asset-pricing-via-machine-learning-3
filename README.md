@@ -14,6 +14,27 @@ pip install -e ".[dev]"
 pytest tests/
 ```
 
+## Usage
+
+### Build Dataset (Phase 2)
+
+Download S&P 500 data from the ARF Data API and build monthly features:
+
+```bash
+python3 -m src.main build-dataset
+```
+
+This produces `data/processed/sp500_monthly_features.parquet` with:
+- 74 S&P 500 tickers (limited by ARF API availability)
+- ~14 years of monthly data (2012-2026)
+- Features: mom_1m, mom_3m, mom_6m, mom_12m, volatility_30d
+- Target: next-month return (target_return)
+
+Options:
+- `--no-cache`: Force re-download (default uses local cache)
+- `--period 15y`: Data lookback period
+- `--output path.parquet`: Custom output path
+
 ## Data
 
 Data is fetched from the ARF Data API at runtime. Do not commit data files.

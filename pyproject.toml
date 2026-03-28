@@ -1,0 +1,6 @@
+[project]
+name = "empirical-asset-pricing-via-machine-learning-3"
+version = "0.1.0"
+description = "Empirical Asset Pricing via Machine Learning"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "scikit-learn", "torch", "matplotlib", "tqdm"]
